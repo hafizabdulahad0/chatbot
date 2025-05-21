@@ -1,11 +1,11 @@
 # app/main.py
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware   # ← import this
 from dotenv import load_dotenv
 from app.api.chat import router as chat_router
 from app.db.mongodb import connect_to_mongo
 
-# Load .env into os.environ
 load_dotenv()
 
 app = FastAPI(
@@ -14,13 +14,20 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Initialize MongoDB if booking feature is used
-connect_to_mongo()
+# ─── CORS SETTINGS ───────────────────────────────────────────
+# Allow your Swagger UI (and any browser client) to call /chat
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],            # <-- for dev you can allow all origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+# ─────────────────────────────────────────────────────────────
 
-# Mount our /chat endpoint
+connect_to_mongo()
 app.include_router(chat_router, prefix="/chat")
 
 @app.get("/", tags=["Health"])
 async def health_check():
-    # Simple health check endpoint
     return {"status": "ok", "message": "Service is running"}
