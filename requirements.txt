@@ -1,0 +1,11 @@
+# requirements.txt
+fastapi
+uvicorn[standard]
+pydantic
+requests
+beautifulsoup4
+openai
+chromadb
+pymongo
+python-dotenv
+PyPDF2
