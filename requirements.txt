@@ -9,3 +9,6 @@ chromadb
 pymongo
 python-dotenv
 PyPDF2
+flask
+flask-cors
+requests

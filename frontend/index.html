@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Chatbot Tester</title>
+  <title>Chatbot Test UI</title>
   <style>
-    body { font-family: sans-serif; margin: 2rem; }
-    #response { white-space: pre-wrap; background: #f4f4f4; padding: 1rem; border-radius: 4px; }
+    body { font-family: sans-serif; max-width: 600px; margin: 2rem auto; }
+    #response { white-space: pre-wrap; background: #f4f4f4; padding: 1rem; border: 1px solid #ddd; border-radius: 4px; }
+    input { width: 80%; padding: 0.5rem; font-size: 1rem; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; }
   </style>
 </head>
 <body>
   <h1>Chatbot Test UI</h1>
-  <input id="message" type="text" style="width:300px" placeholder="Type your question" />
+  <input id="message" type="text" placeholder="Type your question" />
   <button id="send">Send</button>
   <h2>Response</h2>
   <div id="response">…waiting for your query…</div>
@@ -26,11 +28,11 @@
           body: JSON.stringify({ message: msg })
         });
         const data = await res.json();
-        document.getElementById('response').textContent = 
+        if (data.error) throw new Error(data.error);
+        document.getElementById('response').textContent =
           `Answer:\n${data.answer}\n\nSources:\n${data.sources.join(', ')}`;
       } catch (err) {
-        document.getElementById('response').textContent =
-          '❌ Error: ' + err.message;
+        document.getElementById('response').textContent = '❌ ' + err.message;
       }
     };
   </script>

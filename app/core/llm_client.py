@@ -1,12 +1,14 @@
 # app/core/llm_client.py
 
 import os
+from dotenv import load_dotenv
 import openai
 
-# Read API key
+# ─── Load .env so OPENAI_API_KEY is available ─────────────────────────
+load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 if not openai.api_key:
-    raise RuntimeError("Please set OPENAI_API_KEY")
+    raise RuntimeError("Please set OPENAI_API_KEY in your environment")
 
 def call_llm(
     prompt: str,
@@ -15,9 +17,10 @@ def call_llm(
     max_tokens: int = 512
 ) -> str:
     """
-    Send a chat completion request to OpenAI and return the assistant's reply.
+    Send a chat completion request via the new v1 API and return the assistant's reply.
     """
-    resp = openai.ChatCompletion.create(
+    # Use the v1 endpoint for chat completions
+    resp = openai.chat.completions.create(
         model=model,
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
@@ -26,4 +29,5 @@ def call_llm(
         temperature=temperature,
         max_tokens=max_tokens
     )
+    # Extract the generated content
     return resp.choices[0].message.content.strip()
