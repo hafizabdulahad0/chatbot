@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chatbot Tester</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; }
+    #response { white-space: pre-wrap; background: #f4f4f4; padding: 1rem; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>Chatbot Test UI</h1>
+  <input id="message" type="text" style="width:300px" placeholder="Type your question" />
+  <button id="send">Send</button>
+  <h2>Response</h2>
+  <div id="response">…waiting for your query…</div>
+
+  <script>
+    document.getElementById('send').onclick = async () => {
+      const msg = document.getElementById('message').value;
+      document.getElementById('response').textContent = '⏳ Sending…';
+      try {
+        const res = await fetch('/chat/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: msg })
+        });
+        const data = await res.json();
+        document.getElementById('response').textContent = 
+          `Answer:\n${data.answer}\n\nSources:\n${data.sources.join(', ')}`;
+      } catch (err) {
+        document.getElementById('response').textContent =
+          '❌ Error: ' + err.message;
+      }
+    };
+  </script>
+</body>
+</html>
