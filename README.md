@@ -186,57 +186,9 @@ uvicorn app.main:app --reload
 * **Chat UI:**     `http://127.0.0.1:8000/frontend/index.html`
 * **Swagger:**     `http://127.0.0.1:8000/docs`
 
-````
 
-- **`uvicorn`** command runs the FastAPI server with auto-reload on code changes.  
-- Lists three easy ways to interact: a simple JSON health check, the static front-end, and the built-in Swagger docs.
 
----
-
-## 7. Chat Examples
-
-```markdown
-## 🤖 Chat Examples
-
-```bash
-# CLI
-python chat_cli.py
-
-# curl
-curl -X POST http://127.0.0.1:8000/chat/ \
-  -H "Content-Type: application/json" \
-  -d '{"message":"What is included in the 5-Day Hunza Tour?"}'
-````
-
-````
-
-- **Multiple interfaces**:  
-  - **CLI** for quick terminal hits.  
-  - **`curl`** for raw HTTP testing.  
-- Shows exactly what JSON to send and what command to use.
-
----
-
-## 8. Customization & Tips
-
-```markdown
-## 🛠️ Customization & Tips
-
-- Adjust **`run_rag`** few-shot prompt in `app/core/rag_pipeline.py` for better accuracy  
-- Tune **`RAG_TOP_K`**, embedding model, or completion model via environment variables  
-- Add retries, logging, and async support for production readiness  
-````
-
-* **Why it’s here:**
-
-  * Encourages future improvements and gives pointers on where to look.
-* **Areas to tweak:**
-
-  * **Prompt engineering**, **model parameters**, **error handling**, and **performance**.
-
----
-
-## 9. License
+## 5. License
 
 ```markdown
 ## License
