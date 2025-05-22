@@ -1,14 +1,10 @@
-Below is a **section-by-section deep-dive** of the `README.md`, explaining exactly what each part does, why it’s there, and how you (or any new developer) should use it.
 
----
 
-## 1. Title & Project Description
 
-```markdown
 # Custom Chatbot Backend
 
 An end-to-end Retrieval-Augmented Generation (RAG) chatbot service using FastAPI, ChromaDB, and OpenAI.
-```
+
 
 * **What it is:**
 
