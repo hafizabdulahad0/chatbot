@@ -22,7 +22,7 @@ from services.data_ingestion.loader      import Loader
 from services.vectorstore_builder.build_vectorstore import main as build_vectorstore
 
 def main():
-    root = Path(__file__).parent
+    root    = Path(__file__).parent
     company = os.getenv("COMPANY_NAME", "my_company")
 
     # ── 1. Load & sanitize URLs ────────────────────────────────────
@@ -49,10 +49,15 @@ def main():
     WebScraper(output_dir=raw_dir).scrape(urls)
 
     # ── 3. Parse HTML into structured JSON ─────────────────────────
+    manifest_dir  = root / "data" / "webpages"        # <— new manifest_dir
     processed_dir = root / "processed_data" / company
     processed_dir.mkdir(parents=True, exist_ok=True)
     print(f"📄 Parsing HTML → JSON in {processed_dir}")
-    HtmlParser(raw_dir=raw_dir, processed_dir=processed_dir).parse_all()
+    HtmlParser(
+        manifest_dir=manifest_dir,                    # <— pass manifest_dir
+        raw_dir=raw_dir,
+        processed_dir=processed_dir
+    ).parse_all()
 
     # ── 4. Chunk text into token‐limited slices ────────────────────
     print("✂️  Chunking text into ≤500-token pieces")

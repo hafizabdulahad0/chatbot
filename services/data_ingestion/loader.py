@@ -1,40 +1,44 @@
-# services/data_ingestion/loader.py
-
-from pathlib import Path
 import json
+from pathlib import Path
+from typing import Any, Dict, List
 from pydantic import BaseModel, ValidationError
-from typing import List, Any, Optional
 
-# Pydantic models for schema validation
+class Section(BaseModel):
+    header: str
+    content: Any        # ← allow string, int, list, dict, etc.
+
+class ChunkMetadata(BaseModel):
+    page_id: str
+    section: str
+    chunk_index: int
+
 class Chunk(BaseModel):
     id: str
     text: str
-    metadata: dict
+    metadata: ChunkMetadata
 
 class Document(BaseModel):
     page_id: str
-    url: Optional[str]
-    metadata: dict
-    sections: List[Any]
+    page_title: str | None = None
+    sections: List[Section]
     chunks: List[Chunk]
 
 class Loader:
-    """
-    Validate each structured JSON against the Document schema.
-    """
-
     def __init__(self, processed_dir: Path):
         self.processed_dir = processed_dir
 
     def validate_all(self):
-        """
-        For each *_structured.json:
-        1. Load JSON.
-        2. Attempt Document(**data).
-        3. Raise if any validation errors.
-        """
         for file in self.processed_dir.glob("*_structured.json"):
-            data = json.loads(file.read_text(encoding='utf-8'))
+            data = json.loads(file.read_text(encoding="utf-8"))
+
+            # still allow dict-shaped sections
+            secs = data.get("sections")
+            if isinstance(secs, dict):
+                data["sections"] = [
+                    {"header": hdr, "content": content}
+                    for hdr, content in secs.items()
+                ]
+
             try:
                 Document(**data)
             except ValidationError as e:
